@@ -769,7 +769,46 @@
     min-height: 220px;
   }
 }
+/* بزرگ‌نمایی تصاویر مدرسه بهار */
+#gallery .gallery-item img,
+#school-life .life-card img,
+.hero-art img {
+  cursor: zoom-in;
+}
 
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: rgba(15, 20, 32, 0.93);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.photo-lightbox img {
+  max-width: 94vw;
+  max-height: 88vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.photo-lightbox button {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: white;
+  color: #182b49;
+  font-size: 28px;
+  cursor: pointer;
+}
   </style>
 </head>
 
@@ -1335,7 +1374,50 @@
     </div>
   </footer>
   
+<script>
+document.addEventListener("click", function(event) {
+  const photo = event.target.closest(
+    "#gallery .gallery-item img, #school-life .life-card img, .hero-art img"
+  );
 
+  if (!photo) return;
+
+  const lightbox = document.createElement("div");
+  lightbox.className = "photo-lightbox";
+
+  const largeImage = document.createElement("img");
+  largeImage.src = photo.src;
+  largeImage.alt = photo.alt || "تصویر مدرسه بهار";
+
+  const closeButton = document.createElement("button");
+  closeButton.type = "button";
+  closeButton.textContent = "×";
+  closeButton.setAttribute("aria-label", "بستن تصویر");
+
+  lightbox.appendChild(largeImage);
+  lightbox.appendChild(closeButton);
+  document.body.appendChild(lightbox);
+  document.body.style.overflow = "hidden";
+
+  function closeLightbox() {
+    lightbox.remove();
+    document.body.style.overflow = "";
+    document.removeEventListener("keydown", handleKey);
+  }
+
+  function handleKey(e) {
+    if (e.key === "Escape") closeLightbox();
+  }
+
+  closeButton.addEventListener("click", closeLightbox);
+
+  lightbox.addEventListener("click", function(e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+
+  document.addEventListener("keydown", handleKey);
+});
+</script>
 
 
 </body>
